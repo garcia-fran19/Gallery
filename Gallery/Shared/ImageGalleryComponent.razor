@@ -1,0 +1,37 @@
+﻿@page "/imagegallery"
+@inject IDialogService DialogService
+@using MudBlazor
+
+<MudGrid>
+    @foreach (var image in Images)
+    {
+        <MudItem xs="12" sm="6" md="4" lg="3">
+            <MudCard>
+                <MudCardMedia Image="@(image)" />
+                <MudCardActions>
+                    <MudButton OnClick="() => OpenLightbox(image)">View</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    }
+</MudGrid>
+
+
+
+
+@code {
+    private List<string> Images = new List<string>
+    {
+        "images/img1.jpg",
+        "images/img2.jpg",
+        "images/img3.jpg"
+        // Agrega más rutas de imágenes aquí
+    };
+
+    private async Task OpenLightbox(string image)
+    {
+        var parameters = new DialogParameters { ["ImageUrl"] = image };
+        await DialogService.ShowAsync<LightboxDialog>("Image Viewer", parameters);
+    }
+
+}

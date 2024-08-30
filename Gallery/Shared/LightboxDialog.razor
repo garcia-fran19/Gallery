@@ -1,0 +1,15 @@
+﻿@inject IDialogService DialogService
+@parameter string ImageUrl { get; set; }
+@using MudBlazor
+<MudDialog>
+    <MudDialogContent>
+        <MudImage Src="@ImageUrl" Alt="Image" Width="100%" />
+    </MudDialogContent>
+    <MudDialogActions>
+        <MudButton OnClick="Close">Close</MudButton>
+    </MudDialogActions>
+</MudDialog>
+
+@code {
+    void Close() => DialogService.Close(DialogResult.Ok(true));
+}
