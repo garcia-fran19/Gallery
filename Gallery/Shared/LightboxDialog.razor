@@ -4,29 +4,59 @@
 
 <MudDialog>
     <DialogContent>
-        <MudImage Src="@ImageUrl" Alt="Image" Width="200" />
+        <MudImage Fluid="true" Src="@CurrentImage" Alt="Image" />
     </DialogContent>
     <DialogActions>
+        <MudButton OnClick="ShowPreviousImage" Disabled="@IsFirstImage">Anterior</MudButton>
+        <MudButton OnClick="ShowNextImage" Disabled="@IsLastImage">Siguiente</MudButton>
         <MudButton OnClick="CloseDialog">Close</MudButton>
     </DialogActions>
 </MudDialog>
 
 @code {
+    [Parameter]
+    public List<string> Images { get; set; }
 
     [Parameter]
-    public string ImageUrl { get; set; }
+    public string SelectedImage { get; set; }
 
     [CascadingParameter]
     MudBlazor.MudDialogInstance MudDialog { get; set; }  // Obtén la instancia desde el contexto
 
+    private int currentIndex;
+
+    private string CurrentImage => Images[currentIndex];
+
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
+        currentIndex = Images.IndexOf(SelectedImage);
         StateHasChanged(); // Forzar una actualización de la interfaz de usuario
+    }
+
+    private void ShowPreviousImage()
+    {
+        if (currentIndex > 0)
+        {
+            currentIndex--;
+            StateHasChanged(); // Forzar actualización de la UI
+        }
+    }
+
+    private void ShowNextImage()
+    {
+        if (currentIndex < Images.Count - 1)
+        {
+            currentIndex++;
+            StateHasChanged(); // Forzar actualización de la UI
+        }
     }
 
     void CloseDialog()
     {
         MudDialog.Close(DialogResult.Ok(true));
     }
+
+    private bool IsFirstImage => currentIndex == 0;
+    private bool IsLastImage => currentIndex == Images.Count - 1;
 }

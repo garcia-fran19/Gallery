@@ -17,8 +17,6 @@
 </MudGrid>
 
 
-
-
 @code {
     private List<string> Images = new List<string>
     {
@@ -30,7 +28,8 @@
 
     private async Task OpenLightbox(string image)
     {
-        var parameters = new DialogParameters { ["ImageUrl"] = image };
+        var parameters = new DialogParameters {   { "Images", Images },
+        { "SelectedImage", image } };
         await DialogService.ShowAsync<LightboxDialog>("Image Viewer", parameters);
     }
 
