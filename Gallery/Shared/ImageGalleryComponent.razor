@@ -10,6 +10,9 @@
                 <MudCardMedia Image="@(image)" />
                 <MudCardActions>
                     <MudButton OnClick="() => OpenLightbox(image)">View</MudButton>
+                     <MudIconButton Icon="@GetIcon(image)"
+                                   Color="@GetIconColor(image)"
+                                   OnClick="() => ToggleFavorite(image)" />
                 </MudCardActions>
             </MudCard>
         </MudItem>
@@ -22,9 +25,20 @@
     {
         "images/img1.webp",
         "images/img2.webp"
-       
+
         // Agrega más rutas de imágenes aquí
     };
+
+    private string GetIcon(string imageUrl)
+    {
+        return IsFavorite(imageUrl) ? Icons.Material.Filled.Favorite : Icons.Material.Filled.FavoriteBorder;
+    }
+
+    private MudBlazor.Color GetIconColor(string imageUrl)
+    {
+
+        return IsFavorite(imageUrl) ? MudBlazor.Color.Error : MudBlazor.Color.Default;
+    }
 
     private async Task OpenLightbox(string image)
     {
@@ -32,5 +46,23 @@
         { "SelectedImage", image } };
         await DialogService.ShowAsync<LightboxDialog>("Image Viewer", parameters);
     }
+
+
+    //implementacion de funcionalidad marca favorita
+    private HashSet<string> FavoriteImages = new HashSet<string>();
+
+    private void ToggleFavorite(string imageUrl)
+    {
+        if (FavoriteImages.Contains(imageUrl))
+        {
+            FavoriteImages.Remove(imageUrl);
+        }
+        else
+        {
+            FavoriteImages.Add(imageUrl);
+        }
+    }
+
+    private bool IsFavorite(string imageUrl) => FavoriteImages.Contains(imageUrl);
 
 }
