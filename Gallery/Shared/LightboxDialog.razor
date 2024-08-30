@@ -1,15 +1,32 @@
-﻿@inject IDialogService DialogService
-@parameter string ImageUrl { get; set; }
+﻿@inject MudBlazor.IDialogService DialogService
 @using MudBlazor
+
+
 <MudDialog>
-    <MudDialogContent>
-        <MudImage Src="@ImageUrl" Alt="Image" Width="100%" />
-    </MudDialogContent>
-    <MudDialogActions>
-        <MudButton OnClick="Close">Close</MudButton>
-    </MudDialogActions>
+    <DialogContent>
+        <MudImage Src="@ImageUrl" Alt="Image" Width="200" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="CloseDialog">Close</MudButton>
+    </DialogActions>
 </MudDialog>
 
 @code {
-    void Close() => DialogService.Close(DialogResult.Ok(true));
+
+    [Parameter]
+    public string ImageUrl { get; set; }
+
+    [CascadingParameter]
+    MudBlazor.MudDialogInstance MudDialog { get; set; }  // Obtén la instancia desde el contexto
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        StateHasChanged(); // Forzar una actualización de la interfaz de usuario
+    }
+
+    void CloseDialog()
+    {
+        MudDialog.Close(DialogResult.Ok(true));
+    }
 }
