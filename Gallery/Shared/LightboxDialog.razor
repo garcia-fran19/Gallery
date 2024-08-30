@@ -2,9 +2,11 @@
 @using MudBlazor
 
 
-<MudDialog>
-    <DialogContent>
-        <MudImage Fluid="true" Src="@CurrentImage" Alt="Image" />
+<MudDialog MaxWidth="90%" MaxHeight="90%" Style="width: 90%; height: 90%;">
+    <DialogContent  >
+         <div style="width: 90%; height: 90%; margin: auto; display: flex; justify-content: center; align-items: center;">
+        <MudImage Src="@CurrentImage" Alt="Image" Style="object-fit: contain; width: 100%; height: 100%;" />
+    </div>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="ShowPreviousImage" Disabled="@IsFirstImage">Anterior</MudButton>
@@ -27,6 +29,7 @@
 
     private string CurrentImage => Images[currentIndex];
 
+    ObjectFit ImageFit = ObjectFit.Contain;
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
