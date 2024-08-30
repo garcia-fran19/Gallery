@@ -2,23 +2,54 @@
 @inject IDialogService DialogService
 @using MudBlazor
 
+
+<MudContainer>
+    <div style="margin-bottom: 20px;">
+    <MudButton OnClick="ShowFavorites" Variant="Variant.Filled" Color="Color.Secondary">Favoritos</MudButton>
+    </div>
+    @if (showingFavorites && FavoriteImages.Count > 0)
+    {
+        <MudGrid>
+            @foreach (var favoriteImage in FavoriteImages)
+            {
+                <MudItem xs="12" sm="6" md="4" lg="3">
+                    <MudCard>
+                        <MudCardMedia Image="@favoriteImage" />
+                        <MudCardActions>
+                            <MudButton OnClick="() => OpenLightbox(favoriteImage)">Ver</MudButton>
+                            <MudIconButton Icon="@GetIcon(favoriteImage)"
+                                           Color="@GetIconColor(favoriteImage)"
+                                           OnClick="() => ToggleFavorite(favoriteImage)" />
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+    }
+    else if (showingFavorites && FavoriteImages.Count == 0)
+    {
+        <MudText>No hay imágenes favoritas.</MudText>
+    }
+    else
+    {
 <MudGrid>
     @foreach (var image in Images)
     {
         <MudItem xs="12" sm="6" md="4" lg="3">
             <MudCard>
                 <MudCardMedia Image="@(image)" />
-                <MudCardActions>
-                    <MudButton OnClick="() => OpenLightbox(image)">View</MudButton>
+                        <MudCardActions style="display: flex; justify-content: space-between; align-items: center;">
+                            <MudButton OnClick="() => OpenLightbox(image)" style="margin-left: 5%;">Ver</MudButton>
                      <MudIconButton Icon="@GetIcon(image)"
                                    Color="@GetIconColor(image)"
+                                           style="margin-right: 5%;"
                                    OnClick="() => ToggleFavorite(image)" />
                 </MudCardActions>
             </MudCard>
         </MudItem>
     }
-</MudGrid>
-
+</MudGrid>}
+</MudContainer>
 
 @code {
     private List<string> Images = new List<string>
@@ -28,6 +59,13 @@
 
         // Agrega más rutas de imágenes aquí
     };
+
+
+    private bool showingFavorites = false;
+    private void ShowFavorites()
+    {
+        showingFavorites = !showingFavorites;
+    }
 
     private string GetIcon(string imageUrl)
     {
@@ -53,7 +91,7 @@
 
     private void ToggleFavorite(string imageUrl)
     {
-        if (FavoriteImages.Contains(imageUrl))
+        if (IsFavorite(imageUrl))
         {
             FavoriteImages.Remove(imageUrl);
         }
@@ -63,6 +101,8 @@
         }
     }
 
-    private bool IsFavorite(string imageUrl) => FavoriteImages.Contains(imageUrl);
-
+    private bool IsFavorite(string imageUrl)
+    {
+        return FavoriteImages.Contains(imageUrl);
+    }
 }
